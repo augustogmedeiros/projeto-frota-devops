@@ -1,0 +1,17 @@
+---
+- name: Deploy da API de Mobilidade Urbana
+  hosts: localhost
+  tasks:
+    - name: Parar container antigo (se existir)
+      docker_container:
+        name: frota-service-api
+        state: absent
+
+    - name: Subir novo container da Frota
+      docker_container:
+        name: frota-service-api
+        image: frota-api:latest
+        state: started
+        restart_policy: always
+        published_ports:
+          - "8080:8080"
