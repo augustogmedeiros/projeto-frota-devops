@@ -13,7 +13,7 @@ public class Usuario{
 	this.email = email;
 	this.tipo = tipo;
 	}
-	public Longe getId() {return id;}
+	public Long getId() {return id;}
 	public String getNome() {return nome;}
         public String getEmail() {return email;}
         public String getTipo() {return tipo;}
