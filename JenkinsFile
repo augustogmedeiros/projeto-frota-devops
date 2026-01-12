@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Baixa o código do seu GitHub
+                checkout scm
+            }
+        }
+
+        stage('Build API') {
+            steps {
+                // Compila o Java e gera o .jar (usando o wrapper do Maven)
+                sh './mvnw clean package -DskipTests'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                // Cria a imagem Docker da sua frota
+                sh 'docker build -t frota-api:latest .'
+            }
+        }
+
+        stage('Deploy Local') {
+            steps {
+                // Remove o container antigo se existir e sobe o novo
+                sh '''
+                docker stop frota-service-api || true
+                docker rm frota-service-api || true
+                docker run -d -p 8080:8080 --name frota-service-api frota-api:latest
+                '''
+            }
+        }
+    }
+}
